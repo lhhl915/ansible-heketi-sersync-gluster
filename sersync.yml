@@ -1,0 +1,6 @@
+- name: sersync install
+  hosts: sync
+  sudo: true
+  roles:
+    - sersync_install
+  

@@ -1,0 +1,47 @@
+- name: Install initializtion require software
+  yum: name={{ item }} state=installed
+  with_items:
+   - rsync
+
+- name: mkdir sersync directory
+  file: path=/usr/local/sersync mode=0644 state=directory
+
+- name: copy code to host
+  copy: src=GNU-Linux-x86/ dest=/usr/local/sersync/ mode=755
+
+- name: copy config file
+  template: src={{ item.v }} dest=/usr/local/sersync/{{item.k}}
+  with_items:
+    - { v: confxml_master.xml, k: confxml.xml }
+    - { v: confxml_master2.xml, k: confxml2.xml }
+  when: hostvars['{{inventory_hostname}}']['id'] == "master"
+
+- name: copy config file
+  template: src={{ item.v }} dest=/usr/local/sersync/{{item.k}}
+  with_items:
+    - { v: confxml_slave.xml, k: confxml.xml }
+    - { v: confxml_slave2.xml, k: confxml2.xml }
+  when: hostvars['{{inventory_hostname}}']['id'] == "slave"
+ 
+- sysctl: name="fs.inotify.max_queued_events" value=99999999 sysctl_set=yes state=present reload=yes
+- sysctl: name="fs.inotify.max_user_watches" value=99999999 sysctl_set=yes state=present reload=yes
+- sysctl: name="fs.inotify.max_user_instances" value=65535 sysctl_set=yes state=present reload=yes
+
+- name: copy init file
+  copy: src={{ item }} dest=/usr/lib/systemd/system/ mode=0755
+  with_items:
+    - sersync.service
+    - sersync2.service
+
+- name: service enable
+  service: name={{ item }} enabled=yes
+  with_items:
+    - sersync
+    - sersync2
+
+- shell: systemctl restart {{ item }}
+  with_items:
+    - sersync.service
+    - sersync2.service
+  when: hostvars['{{inventory_hostname}}']['id'] == "master"
+

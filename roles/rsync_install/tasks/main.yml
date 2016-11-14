@@ -1,0 +1,31 @@
+- name: Install initializtion require software
+  yum: name={{ item }} state=installed
+  with_items:
+    - rsync
+
+- name: create directory
+  file: path={{ item }} state=directory
+  with_items:
+    - "{{dir1}}"
+    - "{{dir2}}"
+
+- name: copy secret file to host
+  template: src={{ item }}  dest=/etc/ mode=0600 owner=root group=root 
+  with_items:
+    - rsyncd.secret
+    - rsync.pas
+    - rsyncd.conf
+  notify: rsyncd restart
+
+#- name: copy config file to host
+#  template: src={{ item }}  dest=/etc/ mode=0600 owner=root group=root 
+#  with_items:
+#    - rsyncd.conf
+#  notify: rsyncd restart
+
+- name: enable rsyncd && start rsyncd
+  service: name=rsyncd enabled=yes state=started 
+
+# 如果selinux是开着的必须关闭
+- name: selinux disable
+  selinux: state=disabled 

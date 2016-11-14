@@ -1,0 +1,8 @@
+- name: rsync sersync heketi install 
+  hosts: sync
+  user: root
+  sudo: true
+  roles:
+    - rsync_install
+    - sersync_install
+  #  - check_heketi

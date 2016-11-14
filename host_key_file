@@ -1,0 +1,9 @@
+[sync]
+172.31.1.10  id=master transfer=172.31.1.11 ansible_ssh_user=ldp
+172.31.1.11  id=slave transfer=172.31.1.10 ansible_ssh_user=ldp
+
+[sync:vars]
+sync_name=yx_sync1
+sync_pass=pass%&!2016
+dir1=/etc/heketi
+dir2=/var/lib/heketi/db

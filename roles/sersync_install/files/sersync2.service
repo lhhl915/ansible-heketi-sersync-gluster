@@ -1,0 +1,10 @@
+[Unit]
+Description=fast remote file copy program daemon
+Documentation=/usr/local/sersync/confxml2.xml
+
+[Service]
+Type=forking
+ExecStart=/usr/local/sersync/sersync2 -d -r -o /usr/local/sersync/confxml2.xml
+Restart=on-abnormal
+[Install]
+WantedBy=multi-user.target

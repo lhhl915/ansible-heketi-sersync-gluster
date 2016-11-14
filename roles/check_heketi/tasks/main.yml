@@ -1,0 +1,15 @@
+- name: mkdir script directory
+  file: path=/var/script state=directory mode=0644
+  when: hostvars['{{inventory_hostname}}']['id'] == "master"
+
+- name: copy script to host
+  template: src={{item}} dest=/var/script/ owner=root group=root mode=0755
+  with_items:
+    - check.txt
+    - heketi_check.sh
+  when: hostvars['{{inventory_hostname}}']['id'] == "master"
+
+- name: create crontab
+  cron: name="检查sersync和heketi服务" minute="0" hour="4" job="sh /var/script/heketi_check.sh > /dev/null" 
+  when: hostvars['{{inventory_hostname}}']['id'] == "master"
+

@@ -1,0 +1,5 @@
+- name: check heketi script
+  hosts: sync
+  sudo: true
+  roles:
+    - check_heketi
