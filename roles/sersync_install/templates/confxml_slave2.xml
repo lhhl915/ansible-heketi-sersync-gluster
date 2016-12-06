@@ -24,10 +24,12 @@
 <localpath watch="{{ dir2 }}/">
     <!--remote ip="127.0.0.1" name="tongbu1"/>-->
 {% for host in groups.all %}
-{% if host == ansible_default_ipv4.address %}
+{% for node in ansible_all_ipv4_addresses %}
+{% if host == node %}
     <remote ip="{{hostvars[host]['transfer']}}" name="heketi_db"/>
     <!-- <remote ip="{{host}}" name="heketi"/> -->
 {% endif %}
+{% endfor %}
 {% endfor %}
     <!--<remote ip="192.168.8.39" name="tongbu"/>-->
     <!--<remote ip="192.168.8.40" name="tongbu"/>-->

@@ -1,6 +1,6 @@
 [sync]
-172.31.1.10  id=master transfer=172.31.1.11 ansible_ssh_user=ldp
-172.31.1.11  id=slave transfer=172.31.1.10 ansible_ssh_user=ldp
+192.168.202.110  id=master transfer=192.168.202.111 ansible_ssh_user=root
+192.168.202.111  id=slave transfer=192.168.202.110 ansible_ssh_user=root
 
 [sync:vars]
 sync_name=yx_sync1
